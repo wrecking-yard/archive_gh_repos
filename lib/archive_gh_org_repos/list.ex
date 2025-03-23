@@ -1,8 +1,31 @@
-defmodule List do
+defmodule ArchiveGHOrgRepos.List do
   {:ok, _} = Application.ensure_all_started(:req)
+
+  use GenServer
+
+  @impl true
+  def init(gh_org, token \\ nil, filter \\ ~r/.+/) do
+    {:ok,
+     %{
+       url: "https://api.github.com/orgs/#{gh_org}/repos",
+       token: token,
+       filter: filter
+     }}
+  end
+
+  @impl true
+  def handle_call(:all_repos, _from, state) do
+    repo_names = names(state.url, state.token, state.filter)
+
+    {:reply, repo_names, state}
+  end
 
   def _parse_link_header([link_header_value]) do
     _parse_link_header(link_header_value)
+  end
+
+  def _parse_link_header(nil) do
+    %{}
   end
 
   def _parse_link_header(link_header_value) do
@@ -15,12 +38,18 @@ defmodule List do
     )
   end
 
-  def names(org, token, filter) do
-    _names("https://api.github.com/orgs/#{org}/repos", token, filter)
+  def _http_get(url, nil) do
+    {:ok, %{body: body, headers: headers}} = Req.get(url)
+    {headers, body}
   end
 
-  def _names(url, token, filter) do
+  def _http_get(url, token) do
     {:ok, %{body: body, headers: headers}} = Req.get(url, auth: "token" <> " " <> token)
+    {headers, body}
+  end
+
+  def names(url, token, filter) do
+    {headers, body} = _http_get(url, token)
 
     filtered_names =
       Enum.filter(body, fn e -> Regex.match?(filter, e["name"]) end)
@@ -33,7 +62,7 @@ defmodule List do
         filtered_names
 
       _ ->
-        filtered_names ++ _names(pagination_links["next"], token, filter)
+        filtered_names ++ names(pagination_links["next"], token, filter)
     end
   end
 end
