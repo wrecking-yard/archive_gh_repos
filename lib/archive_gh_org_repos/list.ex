@@ -4,18 +4,17 @@ defmodule ArchiveGHOrgRepos.List do
   use GenServer
 
   @impl true
-  def init(gh_org, token \\ nil, filter \\ ~r/.+/) do
+  def init(token \\ nil) do
     {:ok,
      %{
-       url: "https://api.github.com/orgs/#{gh_org}/repos",
-       token: token,
-       filter: filter
+       url_fun: fn gh_org -> "https://api.github.com/orgs/#{gh_org}/repos" end,
+       token: token
      }}
   end
 
   @impl true
-  def handle_call(:all_repos, _from, state) do
-    repo_names = names(state.url, state.token, state.filter)
+  def handle_call({:all_repos, gh_org, filter}, _from, state) do
+    repo_names = names(state.url_fun.(gh_org), state.token, filter)
 
     {:reply, repo_names, state}
   end

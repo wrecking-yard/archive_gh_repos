@@ -12,7 +12,7 @@ defmodule ArchiveGHOrgRepos.Application do
     children = [
       %{
         id: List,
-        start: {GenServer, :start_link, [List, "wrecking-yard", [{:name, List}]]}
+        start: {GenServer, :start_link, [List, nil, [{:name, List}]]}
       },
       %{
         id: Clone,
