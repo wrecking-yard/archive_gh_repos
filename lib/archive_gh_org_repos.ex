@@ -1,5 +1,4 @@
 defmodule ArchiveGHOrgRepos do
-  def call(:clone_all_repos, gh_org, timeout \\ 120_000) do
-    GenServer.call(ArchiveGHOrgRepos.Clone, {:clone_all_repos, gh_org}, timeout)
-  end
+  defdelegate all_repos(gh_org, timeout), to: ArchiveGHOrgRepos.List
+  defdelegate clone_all_repos(gh_org, timeout), to: ArchiveGHOrgRepos.Clone
 end

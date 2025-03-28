@@ -64,4 +64,8 @@ defmodule ArchiveGHOrgRepos.List do
         filtered_names ++ names(pagination_links["next"], token, filter)
     end
   end
+
+  def all_repos(gh_org, timeout) do
+    GenServer.call(ArchiveGHOrgRepos.List, {:all_repos, gh_org, ~r/.+/}, timeout)
+  end
 end

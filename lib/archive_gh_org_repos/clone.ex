@@ -17,10 +17,10 @@ defmodule ArchiveGHOrgRepos.Clone do
   end
 
   @impl true
-  def handle_call({:clone_all_repos, org}, _from, state) do
+  def handle_call({:clone_all_repos, org, timeout}, _from, state) do
     {:reply,
      for(
-       repo <- GenServer.call(ArchiveGHOrgRepos.List, {:all_repos, org, ~r/.+/}),
+       repo <- ArchiveGHOrgRepos.all_repos(org, timeout),
        do: clone(org, repo, state.root_dir, state.reflect_path, state.add_git_postfix)
      ), state}
   end
@@ -36,5 +36,9 @@ defmodule ArchiveGHOrgRepos.Clone do
       ],
       lines: 8192
     )
+  end
+
+  def clone_all_repos(gh_org, timeout \\ 240_000) do
+    GenServer.call(ArchiveGHOrgRepos.Clone, {:clone_all_repos, gh_org, timeout}, timeout)
   end
 end
