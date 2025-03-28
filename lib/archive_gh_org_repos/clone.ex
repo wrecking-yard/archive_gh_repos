@@ -30,6 +30,7 @@ defmodule ArchiveGHOrgRepos.Clone do
       "git",
       [
         "clone",
+        "--recursive",
         "https://github.com/#{org}/#{repo}.git",
         root_dir <> "/" <> "github.com/#{org}/#{repo}.git"
       ],
