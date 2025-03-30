@@ -1,4 +1,4 @@
-defmodule ArchiveGHOrgRepos.List do
+defmodule ArchiveGHRepos.List do
   {:ok, _} = Application.ensure_all_started(:req)
 
   use GenServer
@@ -66,6 +66,6 @@ defmodule ArchiveGHOrgRepos.List do
   end
 
   def all_repos(gh_org, timeout) do
-    GenServer.call(ArchiveGHOrgRepos.List, {:all_repos, gh_org, ~r/.+/}, timeout)
+    GenServer.call(ArchiveGHRepos.List, {:all_repos, gh_org, ~r/.+/}, timeout)
   end
 end

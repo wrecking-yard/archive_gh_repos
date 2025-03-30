@@ -1,6 +1,6 @@
-defmodule ArchiveGHOrgRepos.Application do
-  alias ArchiveGHOrgRepos.List
-  alias ArchiveGHOrgRepos.Clone
+defmodule ArchiveGHRepos.Application do
+  alias ArchiveGHRepos.List
+  alias ArchiveGHRepos.Clone
 
   use Application
 
