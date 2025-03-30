@@ -1,5 +1,6 @@
 defmodule ArchiveGHRepos.Application do
   alias ArchiveGHRepos.List
+  alias ArchiveGHRepos.Coordinate
   alias ArchiveGHRepos.Clone
 
   use Application
@@ -13,6 +14,10 @@ defmodule ArchiveGHRepos.Application do
       %{
         id: List,
         start: {GenServer, :start_link, [List, nil, [{:name, List}]]}
+      },
+      %{
+        id: Coordinate,
+        start: {GenServer, :start_link, [Coordinate, ".", [{:name, Coordinate}]]}
       },
       %{
         id: Clone,

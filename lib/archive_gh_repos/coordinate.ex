@@ -2,7 +2,11 @@ defmodule ArchiveGHRepos.Coordinate do
   use GenServer
 
   alias ArchiveGHRepos.Helpers
-  alias ArchiveGHRepos.Workflow
+  alias ArchiveGHRepos.Coordinate.Workflow
+
+  defmacrop journal_table do
+    :coordinator_journal
+  end
 
   defstruct(
     ticket: nil,
@@ -12,11 +16,22 @@ defmodule ArchiveGHRepos.Coordinate do
 
   @impl true
   def init(_) do
-    {:ok, nil}
+    :ets.new(journal_table(), [:set, :protected, :named_table]) && {:ok, nil}
   end
 
   @impl true
-  def handle_call({:clone_repos, _user_or_org}, _from, state) do
-    {:reply, Helpers.uuidv4(), state}
+  def handle_call({:clone_all_repos, user_or_org, _timeout}, _from, state) do
+    ticket = Helpers.uuidv4()
+
+    :ets.insert_new(
+      journal_table(),
+      {ticket, %__MODULE__{ticket: ticket, user_or_org: user_or_org, workflow: %Workflow{}}}
+    )
+
+    {:reply, ticket, state}
+  end
+
+  def clone_all_repos(gh_org, timeout \\ 240_000) do
+    GenServer.call(ArchiveGHRepos.Coordinate, {:clone_all_repos, gh_org, timeout}, timeout)
   end
 end

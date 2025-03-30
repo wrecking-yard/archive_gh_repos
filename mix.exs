@@ -1,9 +1,9 @@
-defmodule ArchiveGHOrgRepos.MixProject do
+defmodule ArchiveGHRepos.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :archive_gh_org_repos,
+      app: :archive_gh_repos,
       version: "0.1.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule ArchiveGHOrgRepos.MixProject do
   def application do
     [
       extra_applications: [:logger, :wx, :observer],
-      mod: {ArchiveGHOrgRepos.Application, []}
+      mod: {ArchiveGHRepos.Application, []}
     ]
   end
 

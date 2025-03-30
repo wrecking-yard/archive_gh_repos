@@ -38,7 +38,7 @@ defmodule ArchiveGHRepos.Clone do
     )
   end
 
-  def clone_all_repos(gh_org, timeout \\ 240_000) do
-    GenServer.call(ArchiveGHRepos.Clone, {:clone_all_repos, gh_org, timeout}, timeout)
-  end
+  #def clone_all_repos(gh_org, timeout \\ 240_000) do
+  #  GenServer.call(ArchiveGHRepos.Clone, {:clone_all_repos, gh_org, timeout}, timeout)
+  #end
 end

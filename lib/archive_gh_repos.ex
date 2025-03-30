@@ -1,4 +1,4 @@
 defmodule ArchiveGHRepos do
-  defdelegate all_repos(gh_org, timeout), to: ArchiveGHRepos.List
-  defdelegate clone_all_repos(gh_org, timeout), to: ArchiveGHRepos.Clone
+  defdelegate all_repos(user_or_org, timeout), to: ArchiveGHRepos.List
+  defdelegate clone_all_repos(user_or_org, timeout), to: ArchiveGHRepos.Coordinate
 end
