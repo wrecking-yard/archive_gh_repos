@@ -31,7 +31,16 @@ defmodule ArchiveGHRepos.Coordinate do
     {:reply, ticket, state}
   end
 
+  @impl true
+  def handle_call({:clone_status, ticket, _timeout}, _from, state) do
+    {:reply, :ets.lookup(journal_table(), ticket), state}
+  end
+
   def clone_all_repos(gh_org, timeout \\ 240_000) do
     GenServer.call(ArchiveGHRepos.Coordinate, {:clone_all_repos, gh_org, timeout}, timeout)
+  end
+
+  def clone_status(ticket, timeout \\ 240_000) do
+    GenServer.call(ArchiveGHRepos.Coordinate, {:clone_status, ticket, timeout}, timeout)
   end
 end
