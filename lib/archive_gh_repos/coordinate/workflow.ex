@@ -126,7 +126,7 @@ defmodule ArchiveGHRepos.Coordinate.Workflow do
             task_ref() | nil,
             result_ref() | nil
           }
-          | {:none | :completed, nil}
+          | {:none | :error | :completed, task_ref(), nil}
   # :get_repos - fresh start
   def next_to_run(%__MODULE__{start: {{:get_repos, status: nil, result_ref: nil}, _, _}}) do
     {:next, [:start, Access.elem(0), Access.elem(0)], nil}
@@ -214,6 +214,6 @@ defmodule ArchiveGHRepos.Coordinate.Workflow do
           {:submodules, _, status: :completed}
         }
       }) do
-    {:completed, nil}
+    {:completed, [Access.key(nil, :start)], nil}
   end
 end
