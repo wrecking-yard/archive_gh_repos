@@ -156,14 +156,14 @@ defmodule ArchiveGHRepos.Coordinate.Workflow do
     # ugly, TODO: redo. ideally we should not generate all of that data if we don't need it, because we scan repo list multime times.
     # if: 
     # - there is anything not/never started, it's :next.
-    # - all was already started and there is at least one :in_progress repo, it's :in_progress.
-    # - there are only/or :timed_out or/and :error, :timed_out is :next.
+    # - there are are no unstarted tasks, :timed_out is :next.
+    # - if there are only :completed, :error and :in_progress, it's :in_progress.
     # - all is :completed, task is :completed
     # - all is :error, we have task :error.
 
     not_started_index = Enum.find_index(repos, fn {_, [status: nil, result_ref: nil]} -> true end)
-    in_progress_index = Enum.find_index(repos, fn {_, [status: :in_progress, result_ref: nil]} -> true end)
     timed_out_index = Enum.find_index(repos, fn {_, [status: :timed_out, result_ref: nil]} -> true end)
+    in_progress_index = Enum.find_index(repos, fn {_, [status: :in_progress, result_ref: nil]} -> true end)
     all_completed = Enum.all?(repos, fn {_, [status: :completed, result_ref: _]} -> true end)
     all_error = Enum.all?(repos, fn {_, [status: :error, result_ref: _]} -> true end)
 

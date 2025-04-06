@@ -43,4 +43,7 @@ defmodule ArchiveGHRepos.Coordinate do
   def clone_status(ticket, timeout \\ 240_000) do
     GenServer.call(ArchiveGHRepos.Coordinate, {:clone_status, ticket, timeout}, timeout)
   end
+
+  def process(ticket) do
+  end
 end
