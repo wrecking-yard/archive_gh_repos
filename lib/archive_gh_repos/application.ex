@@ -13,15 +13,19 @@ defmodule ArchiveGHRepos.Application do
     children = [
       %{
         id: List,
-        start: {GenServer, :start_link, [List, nil, [{:name, List}]]}
+        start: {GenServer, :start_link, [List, nil, [{:name, ArchiveGHRepos.Application.List}]]}
       },
       %{
         id: Coordinate,
-        start: {GenServer, :start_link, [Coordinate, ".", [{:name, Coordinate}]]}
+        start: {GenServer, :start_link, [Coordinate, nil, [{:name, ArchiveGHRepos.Application.Coordinate}]]}
       },
       %{
         id: Clone,
-        start: {GenServer, :start_link, [Clone, ".", [{:name, Clone}]]}
+        start: {GenServer, :start_link, [Clone, ".", [{:name, ArchiveGHRepos.Application.Clone}]]}
+      },
+      %{
+        id: Task.Supervisor,
+        start: {Task.Supervisor, :start_link, [[{:name, ArchiveGHRepos.Application.TaskSupervisor}]]}
       }
     ]
 

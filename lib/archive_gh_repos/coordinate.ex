@@ -2,6 +2,7 @@ defmodule ArchiveGHRepos.Coordinate do
   use GenServer
 
   alias ArchiveGHRepos.Helpers
+  alias ArchiveGHRepos.Coordinate
   alias ArchiveGHRepos.Coordinate.Workflow
 
   defmacrop journal_table do
@@ -28,6 +29,8 @@ defmodule ArchiveGHRepos.Coordinate do
       {ticket, %__MODULE__{ticket: ticket, user_or_org: user_or_org, workflow: %Workflow{}}}
     )
 
+    Task.Supervisor.start_child(ArchiveGHRepos.Application.TaskSupervisor, fn -> process(ticket) end)
+
     {:reply, ticket, state}
   end
 
@@ -37,13 +40,14 @@ defmodule ArchiveGHRepos.Coordinate do
   end
 
   def clone_all_repos(gh_org, timeout \\ 240_000) do
-    GenServer.call(ArchiveGHRepos.Coordinate, {:clone_all_repos, gh_org, timeout}, timeout)
+    GenServer.call(Coordinate, {:clone_all_repos, gh_org, timeout}, timeout)
   end
 
   def clone_status(ticket, timeout \\ 240_000) do
-    GenServer.call(ArchiveGHRepos.Coordinate, {:clone_status, ticket, timeout}, timeout)
+    GenServer.call(Coordinate, {:clone_status, ticket, timeout}, timeout)
   end
 
   def process(ticket) do
+    :timer.sleep(60 * 1000)
   end
 end
